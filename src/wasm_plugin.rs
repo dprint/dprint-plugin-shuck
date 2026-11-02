@@ -70,6 +70,7 @@ impl SyncPluginHandler<Configuration> for ShellPluginHandler {
         version
       ),
       update_url: Some("https://plugins.dprint.dev/dprint/dprint-plugin-shuck/latest.json".to_string()),
+      supports_range_formatting: Some(true),
     }
   }
 
