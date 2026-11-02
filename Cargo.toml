@@ -28,7 +28,7 @@ wasm = ["serde_json", "dprint-core/wasm"]
 dprint-core = { version = "0.75.0", default-features = false }
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = { version = "1.0.154", optional = true }
-shuck-formatter = "0.2.7"
+shuck-formatter = "0.2.8"
 thiserror = "2"
 
 [dev-dependencies]
