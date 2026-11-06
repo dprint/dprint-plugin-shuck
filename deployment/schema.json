@@ -2,6 +2,72 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://plugins.dprint.dev/dprint/dprint-plugin-shuck/0.0.0/schema.json",
   "type": "object",
+  "x-playground": {
+    "input": [
+      "#!/usr/bin/env bash",
+      "set -euo pipefail",
+      "",
+      "BACKUP_DIR=\"${BACKUP_DIR:-/var/backups}\"",
+      "KEEP_DAYS=7",
+      "",
+      "log() { echo \"[$(date +%H:%M:%S)] $*\" >&2; }",
+      "",
+      "backup_dir()",
+      "{",
+      "  local source=$1",
+      "      local target=\"$BACKUP_DIR/$(basename \"$source\")-$(date +%F).tar.gz\"",
+      "  if [ ! -d \"$source\" ]; then log \"skipping $source\"; return 1; fi",
+      "  tar -czf \"$target\" -C \"$(dirname \"$source\")\" \"$(basename \"$source\")\" 2>/dev/null",
+      "    log \"created $target\"",
+      "}",
+      "",
+      "for dir in \"$@\"; do",
+      "case \"$dir\" in",
+      "/*) backup_dir \"$dir\" ;;",
+      "*) backup_dir \"$PWD/$dir\" ;;",
+      "esac",
+      "done",
+      "",
+      "find \"$BACKUP_DIR\" -name '*.tar.gz' -mtime +$KEEP_DAYS -print |   xargs -r rm --"
+    ]
+  },
+  "x-sections": [
+    {
+      "title": "General",
+      "description": "The dialect and indentation of all the code.",
+      "properties": [
+        "dialect",
+        "indentWidth",
+        "useTabs"
+      ]
+    },
+    {
+      "title": "Line breaks",
+      "description": "Where operators and braces go and when statements are split over multiple lines.",
+      "properties": [
+        "binaryNextLine",
+        "functionNextLine",
+        "neverSplit"
+      ]
+    },
+    {
+      "title": "Spacing",
+      "description": "The indentation of `case` arms and the spaces around redirects and between tokens.",
+      "properties": [
+        "switchCaseIndent",
+        "spaceRedirects",
+        "keepPadding"
+      ]
+    },
+    {
+      "title": "Rewriting",
+      "description": "Rewriting the code to make it simpler or smaller.",
+      "properties": [
+        "simplify",
+        "minify"
+      ]
+    }
+  ],
   "properties": {
     "dialect": {
       "description": "The shell dialect to parse and format the files as.",
@@ -27,52 +93,116 @@
     "indentWidth": {
       "description": "The number of spaces for an indent.",
       "default": 8,
-      "type": "number"
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 255
     },
     "useTabs": {
       "description": "Whether to indent with tabs instead of spaces.",
       "default": true,
-      "type": "boolean"
+      "type": "boolean",
+      "x-example": {
+        "config": {
+          "indentWidth": 4
+        },
+        "input": [
+          "if [ -f \"$file\" ]; then",
+          "echo \"found $file\"",
+          "fi"
+        ]
+      }
     },
     "binaryNextLine": {
       "description": "Whether binary operators (`&&`, `||` and `|`) go at the start of the next line instead of at the end of the line.",
       "default": false,
-      "type": "boolean"
+      "type": "boolean",
+      "x-example": {
+        "input": [
+          "grep \"error\" access.log |",
+          "  sort | uniq -c"
+        ]
+      }
     },
     "switchCaseIndent": {
       "description": "Whether to indent the pattern arms of a `case` statement.",
       "default": false,
-      "type": "boolean"
+      "type": "boolean",
+      "x-example": {
+        "input": [
+          "case \"$1\" in",
+          "start) run_server ;;",
+          "stop) stop_server ;;",
+          "esac"
+        ]
+      }
     },
     "spaceRedirects": {
       "description": "Whether to put a space between a redirect operator and its target (ex. `> file` instead of `>file`).",
       "default": false,
-      "type": "boolean"
+      "type": "boolean",
+      "x-example": {
+        "input": [
+          "echo \"done\" >output.log 2>&1",
+          "sort <names.txt"
+        ]
+      }
     },
     "keepPadding": {
       "description": "Whether to keep the spaces that align columns between tokens.",
       "default": false,
-      "type": "boolean"
+      "type": "boolean",
+      "x-example": {
+        "input": [
+          "cp   -r   assets   dist/"
+        ]
+      }
     },
     "functionNextLine": {
       "description": "Whether to put the opening brace of a function on the next line.",
       "default": false,
-      "type": "boolean"
+      "type": "boolean",
+      "x-example": {
+        "input": [
+          "greet() {",
+          "\techo \"Hello, $1\"",
+          "}"
+        ]
+      }
     },
     "neverSplit": {
       "description": "Whether to keep statements on a single line where possible.",
       "default": false,
-      "type": "boolean"
+      "type": "boolean",
+      "x-example": {
+        "input": [
+          "if [ -z \"$name\" ]; then echo \"missing name\"; exit 1; fi"
+        ]
+      }
     },
     "simplify": {
-      "description": "Whether to rewrite redundant syntax to simpler forms (ex. `${foo}` to `$foo`).",
+      "description": "Whether to rewrite redundant syntax to simpler forms (ex. `$(( ${count} + 1 ))` to `$((count + 1))`).",
       "default": false,
-      "type": "boolean"
+      "type": "boolean",
+      "x-example": {
+        "input": [
+          "total=$(( ${count} + 1 ))"
+        ]
+      }
     },
     "minify": {
       "description": "Whether to remove comments and extra whitespace to make the code small.",
       "default": false,
-      "type": "boolean"
+      "type": "boolean",
+      "x-example": {
+        "input": [
+          "# prints a greeting",
+          "greet() {",
+          "\techo \"Hello, $1\"",
+          "}",
+          "",
+          "greet \"world\""
+        ]
+      }
     }
   }
 }
