@@ -404,18 +404,18 @@ dependencies = [
 
 [[package]]
 name = "shuck-ast"
-version = "0.2.10"
+version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "757ebe8be9c4ebb904dadc88a6468cf6e430a8e30406f09201469ff436e03cff"
+checksum = "b069ebab2965a50528fb843a6890df88b16fd403ea1576f5f68c135c82fca4a8"
 dependencies = [
  "compact_str",
 ]
 
 [[package]]
 name = "shuck-formatter"
-version = "0.2.10"
+version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7f87e326f045a16c61880580b10018fb5501fa429c2702bf48f397623c2cb0be"
+checksum = "7a99065579ba82e6b703020d30c180bfed8171f5296376bcb769f7728aa499f6"
 dependencies = [
  "memchr",
  "rustc-hash",
@@ -427,9 +427,9 @@ dependencies = [
 
 [[package]]
 name = "shuck-indexer"
-version = "0.2.10"
+version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d846b9a5be703d9147b100aecdfcc9056889b653827fbc09e58266af50a60325"
+checksum = "04028dcc10d6438878bde54d63b214b3c52d0c8bb4d4a6d445d07c0ac04215ee"
 dependencies = [
  "shuck-ast",
  "shuck-parser",
@@ -437,9 +437,9 @@ dependencies = [
 
 [[package]]
 name = "shuck-parser"
-version = "0.2.10"
+version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "62662561d570e0ef1339a9bf717b24859661abd5180fb4b27c308aef4e5245f4"
+checksum = "365f970823ffd83933258f246fcc3bbd2f138394d5e8eabc0fd56f77670c71c6"
 dependencies = [
  "memchr",
  "shuck-ast",
